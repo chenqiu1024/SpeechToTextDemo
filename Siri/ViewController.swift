@@ -101,6 +101,8 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
             if result != nil {
                 
                 self.textView.text = result?.bestTranscription.formattedString  //9
+                print("result.transcriptions = \(result?.transcriptions.description ?? "nil")")
+                print("result.bestTranscription.segments = \(result?.bestTranscription.segments.description ?? "nil")")
                 isFinal = (result?.isFinal)!
             }
             
