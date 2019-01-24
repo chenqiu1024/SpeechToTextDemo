@@ -15,6 +15,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
 	@IBOutlet weak var microphoneButton: UIButton!
 	
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "en-US"))!
+//    private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "zh-CN"))!
     
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
@@ -114,6 +115,7 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                 self.recognitionTask = nil
                 
                 self.microphoneButton.isEnabled = true
+                self.microphoneButton.setTitle("Start Recording", for: .normal)
             }
         })
         
