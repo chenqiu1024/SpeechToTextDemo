@@ -53,6 +53,8 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
                 self.microphoneButton.isEnabled = isButtonEnabled
             }
         }
+        
+        self.textView.text = "Say something, I'm listening!"
 	}
 
 	@IBAction func microphoneTapped(_ sender: AnyObject) {
@@ -94,26 +96,38 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         } //5
         
         recognitionRequest.shouldReportPartialResults = true  //6
+        recognitionRequest.contextualStrings = ["Hello", "Start game", "Giant", "Wizard", "Witch", "Goblin", "Gang"];
         
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest, resultHandler: { (result, error) in  //7
             
             var isFinal = false  //8
             
             if result != nil {
-                
-                self.textView.text = result?.bestTranscription.formattedString  //9
+                if let subString = result?.bestTranscription.formattedString {
+                    print("subString='\(subString)', textView.tex='\(self.textView.text as String)'")
+//                    self.textView.text = self.textView.text.appending(subString)
+                    self.textView.text = subString
+                }
+//                self.textView.text = result?.bestTranscription.formattedString  //9
                 print("result.transcriptions = \(result?.transcriptions.description ?? "nil")")
                 print("result.bestTranscription.segments = \(result?.bestTranscription.segments.description ?? "nil")")
                 isFinal = (result?.isFinal)!
+                
+                
+//                self.audioEngine.stop()
+//                inputNode.removeTap(onBus: 0)
+//                self.recognitionRequest = nil
+//                self.recognitionTask = nil
+//                self.startRecording()
             }
             
             if error != nil || isFinal {  //10
                 self.audioEngine.stop()
                 inputNode.removeTap(onBus: 0)
-                
+
                 self.recognitionRequest = nil
                 self.recognitionTask = nil
-                
+
                 self.microphoneButton.isEnabled = true
                 self.microphoneButton.setTitle("Start Recording", for: .normal)
             }
@@ -131,9 +145,6 @@ class ViewController: UIViewController, SFSpeechRecognizerDelegate {
         } catch {
             print("audioEngine couldn't start because of an error.")
         }
-        
-        textView.text = "Say something, I'm listening!"
-        
     }
     
     func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
